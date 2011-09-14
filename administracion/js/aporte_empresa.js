@@ -87,7 +87,6 @@ function guardarDatosAporte(){
  * @author Pablo López M.
  */
 function procesarGuardado(respuesta){
-	//$("#nombreEmpresa").html(respuesta); //SENTENCIA DE DESARROLLO, ELIMINAR!
 	if( respuesta=="true" ){
 		alert( "Los datos de aporte de empresa fueron guardados correctamente." );
 		cancelar();
@@ -95,6 +94,7 @@ function procesarGuardado(respuesta){
 		
 	if( respuesta=="false" )
 		alert( "Ocurrio un error al guardar los datos de aporte de empresa." );
+		cancelar();
 	if( respuesta=="error" )
 		alert( "Hay datos invalidos. Por favor verifique los datos ingresados." );
 }

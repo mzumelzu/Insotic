@@ -9,6 +9,8 @@
 	include_once "validacion/validaciones.php";
 	include_once '../controller/class_aporte_empresa.php';
 	include_once '../controller/class_empresa.php';
+	include_once '../controller/class_cuenta_corriente.php';
+	include_once '../controller/class_empresa_saldo.php';
 	
 	
 	//Se busca el nombre de empresa.
@@ -33,11 +35,14 @@
 		$datos[9] = $_POST["medio"];
 		$datos[10] = $_POST["nroDocumento"];
 		
-		if( validarDatosAporteEmpresa($datos) ){
+		if( validarDatosAporteEmpresa($datos) ){	
 			$aporteEmpresa = new AporteEmpresa();
-			if( $aporteEmpresa->addAporteEmpresa($datos) )
-				echo "true";
-			else
+			if( $aporteEmpresa->addAporteEmpresa($datos) ){
+				if( addCuentaCorriente($datos) )
+					echo "true";
+				else
+					echo "false";
+			}else
 				echo "false";
 		}else{
 			echo "error";
@@ -74,10 +79,11 @@
 	//Se buscan los datos de aporte de empresa a partir del numero de recibo.
 	if( $_GET["accion"]=="buscarAporte" ){
 		//Se crea un objeto controlador de aporte de empresa para hacer las consultas a la base de datos.
-		$aporteEmpresa = new AporteEmpresa();
-		
-		//Se obtiene el numero de recibo.
+		$aporteEmpresa = new AporteEmpresa();		
+		//Se obtiene el numero de recibo y se valida que sea númerico.
 		$nroRecibo = $_GET["recibo"];
+		if( !is_numeric($nroRecibo) )
+			return false;
 		//Se valida que se hayan encontrado resultados.		
 		if( $rAporteEmpresa = $aporteEmpresa->getAporteEmpresaByRecibo($nroRecibo) ){
 			//Se convierte el resultado a un objeto.
@@ -112,6 +118,74 @@
 			//Se codifica y retorna los datos usando JSON.
 			echo json_encode($datos);
 		}
+	}
+	
+	/**
+	 * 
+	 * Funcion que se encarga de crear los registros de cuentas corrientes para los tipos de cuenta a los que se les ingreso un aporte.
+	 * Fecha de Creación: 13/09/2011
+	 * @author Pablo López M.
+	 * @param Array $datos - Arreglo que contiene los datos ingresados en el aporte de empresa.
+	 * @return Boolean - True si las inserciones son correctas, false si ocurre un error.
+	 */
+	function addCuentaCorriente($datos){
+		$cuentaCorriente = new CuentaCorriente();
+		
+		$a[1] = $datos[0].$datos[1];
+		$a[2] = "D";
+		$fAux = explode("/",$datos[2]);
+		$a[4] = $fAux[0];
+		$a[5] = $datos[2];
+		$a[6] = $datos[3];
+		
+		if( $datos[4] > 0 ){
+			$a[0] = "01";
+			$a[3] = $datos[4];
+			if( $cuentaCorriente->addCuentaCorriente($a) )
+				$r = actualizaSaldo($a);
+		}
+		if( $datos[5] > 0 ){
+			$a[0] = "02";
+			$a[3] = $datos[5];
+			if( $cuentaCorriente->addCuentaCorriente($a) )
+				$r &= actualizaSaldo($a);
+		}
+		if( $datos[7] > 0 ){
+			$a[0] = "03";
+			$a[3] = $datos[7];
+			if( $cuentaCorriente->addCuentaCorriente($a) )
+				$r &= actualizaSaldo($a);
+		}
+		
+		return $r;
+	}
+	
+	/**
+	 * 
+	 * Funcion que actualiza los saldos de las empresas por año y tipo de cuenta, si no existe un registro especifico, este se creara con saldo 0 y luego se actualizará.
+	 * Fecha de Creación: 13/09/2011
+	 * @author Pablo López M.
+	 * @param Array $datos - Arreglo que contiene los datos ingresados en el aporte de empresa.
+	 * @return Boolean - True si las inserciones son correctas, false si ocurre un error.
+	 */
+	function actualizaSaldo($a){
+		$datosSaldo[0] = $a[1];
+		$datosSaldo[1] = $a[4];
+		$datosSaldo[2] = $a[0];
+		
+		$empresaSaldo = new EmpresaSaldo();
+		$saldo = $empresaSaldo->getSaldoEmpresa($datosSaldo);
+		if( !$saldo ){
+			$debe = 0;
+			if( !$empresaSaldo->addEmpresaSaldo($datosSaldo) )
+				return false;
+		}else{
+			$fila = mysql_fetch_object($saldo);
+			$debe = $fila->debe;
+		}		
+		$datosSaldo[3] = $debe + $a[3];
+		return $empresaSaldo->updateSaldoDebe($datosSaldo);
+		
 	}
 	
 	/**

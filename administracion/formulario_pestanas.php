@@ -17,7 +17,7 @@ border-style: solid;}
 <!-- No es necesario que Exporten la Libreria Jquery(la exporte x que en este ejemplo no estoy usando el menu) ya que de porsi, se esta exportando previamente con el menu-->
 
 
-    <!--esto es mi modificacion -->
+    <!--esto es mi modificacion acá le puse más color -->
 <script type="text/javascript">
 
 $(document).ready(function() {

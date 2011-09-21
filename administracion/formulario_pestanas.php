@@ -21,6 +21,8 @@ border-style: solid;}
 <script type="text/javascript">
 
 $(document).ready(function() {
+	<!--esto es mi modificacion acá le puse más más color -->
+	<!--esto es mi modificacion acá le puse más más colormás  -->
 
 $(".tab_content").hide();
 $("ul.navegacion li:first").addClass("active").show();

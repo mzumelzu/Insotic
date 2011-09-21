@@ -37,6 +37,8 @@ class comunas{
 		}
 		else {
 			echo "<select name='comuna'>";
+			//@Editado por Nicolás Palma Silva
+			echo "<option value='0'></option>";
 			while ($f = mysql_fetch_object($r)){
 				echo "<option value='$f->id'>$f->nombre</option>";
             }

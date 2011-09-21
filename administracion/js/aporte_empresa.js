@@ -87,6 +87,7 @@ function guardarDatosAporte(){
  * @author Pablo López M.
  */
 function procesarGuardado(respuesta){
+	$("#nombreEmpresa").html(respuesta);
 	if( respuesta=="true" ){
 		alert( "Los datos de aporte de empresa fueron guardados correctamente." );
 		cancelar();

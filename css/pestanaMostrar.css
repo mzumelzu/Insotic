@@ -1,0 +1,69 @@
+/* 												Pestañasss 														*/
+
+ul.navegacion 
+{  
+		margin: 0;    
+		padding: 0;  
+		float: left;  
+		list-style: none;  
+		height: 32px; /*--Define el ancho de las tabs--*/  
+		border-bottom: 1px solid #999;  
+		border-left: 1px solid #999;  
+		width: 100%;  
+  
+}  
+  
+ul.navegacion li 
+{  
+  
+		float: left;    
+		margin: 0;  
+		padding: 0;  
+		height: 31px; /*--Sustrae 1px de la altura de la lista desordenada--*/  
+		line-height: 31px; /*--Alineamiento vertical del texto dentro de la tabla--*/  
+		border: 1px solid #999;  
+		border-left: none;  
+		margin-bottom: -1px; /*--Desplaza los item de la lista abajo 1px--*/  
+		overflow: hidden;  
+		  
+		background: #e0e0e0;  
+}  
+  
+ul.navegacion li a 
+{    
+		text-decoration: none;  
+		color: #000;  
+		display: block;  
+		font-size: 1.2em; 
+		padding: 0 20px;  
+		border: 1px solid #fff; 	    
+}  
+  
+ul.navegacion li a:hover 
+{    
+		background: #ccc;  
+}  
+  
+html ul.navegacion li.active, html ul.navegacion li.active a:hover  
+{ 							
+		background: #fff; 
+		border-bottom: 1px solid #fff; /*--Esto hace que la tab activa esté conectada con respecto a su contenido--*/  
+}  
+
+/* 												Cuerpo 															*/
+
+contenedorPestañas
+{  
+	border: 1px solid #999;  
+	border-top: none;    
+	overflow: hidden;  
+	clear: both;  
+	float: left; width: 100%;  
+	background: #fff;  
+}  
+  
+.contenedorPestañas 
+{    
+	padding: 20px;  
+	font-size: 1.2em;  
+}  

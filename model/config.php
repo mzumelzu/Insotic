@@ -2,10 +2,10 @@
 
 class bd{
 	function conexion(){
-		$cservidor = "insotic.insotec.cl";
+		$cservidor = "localhost";
 		$cbd = "insotic";
-		$cusuario = "insotic";
-		$cpassword = "insotec2011";
+		$cusuario = "root";
+		$cpassword = "";
 		if (!mysql_connect ($cservidor,$cusuario,$cpassword)){
 			echo "ERROR DE CONEXION A SERVIDOR $cservidor"; die();
 		}

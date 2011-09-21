@@ -53,6 +53,7 @@ class AporteEmpresa{
 					$a[8],
 					$a[9],
 					'$a[10]');";
+					echo $sql;
 		$this->conectar();
 		if (mysql_query ($sql)){
 			return true;

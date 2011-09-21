@@ -86,7 +86,7 @@
 						          	<tr>
 							            <td class="texto_adm"><div align="left">Clave usuario</div></td>
 							            <td class="texto_adm"><div align="left">:</div></td>
-							            <td><div align="left"><input name="clave" value="<?php echo $clave;?>" maxlength = "6"></div></td>
+							            <td><div align="left"><input name="clave" value="<?php echo $clave;?>"></div></td>
 							        </tr>
 					        	</table>
 								<?php

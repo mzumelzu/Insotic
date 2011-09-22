@@ -8,7 +8,8 @@
  
 <?php include_once("properties/propiedades.php")?>
 <?php include_once("validaciones.php")
-
+/// qjhdguad
+// mala
 ?>
 
 

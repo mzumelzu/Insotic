@@ -8,11 +8,10 @@
  
 <?php include_once("properties/propiedades.php")?>
 <?php include_once("validaciones.php")
-//hola
 ?>
 
 
-
+//// otra linea
 
 <link rel="stylesheet" type="text/css" href="css/flexigrid.css" />
 <script type="text/javascript" src="jquery-1.2.3.pack.js"></script>
@@ -32,7 +31,7 @@ $(document).ready(function(){
 				{display: 'Nombres', name : 'name', width : 80, sortable : true, align: 'left'},
 				{display: 'Sexo', name : 'name', width : 30, sortable : true, align: 'left'},
 				{display: 'Fec. nacimiento', name : 'numcode', width : 80, sortable : true, align: 'right'},
-				{display: 'Región de desempeño', name : 'iso3', width : 120, sortable : true, align: 'left'},
+				{display: 'Regiï¿½n de desempeï¿½o', name : 'iso3', width : 120, sortable : true, align: 'left'},
 				{display: 'Escolaridad', name : 'iso3', width : 80, sortable : true, align: 'left'},
 				{display: 'Grp. oper', name : 'iso3', width : 100, sortable : true, align: 'left'},
 				],
@@ -129,7 +128,7 @@ function test(com,grid)
 </head>
 <?php
 
-//@author Nicolás Palma Silva
+//@author Nicolï¿½s Palma Silva
 
 
 if (isset($_POST['guardar'])){ 
@@ -147,7 +146,7 @@ if (isset($_POST['guardar'])){
 	$institucion = new institucion(); 
 	//Valida rut
 	if(mod11($a[0], $ver)==true or $ver==""){
-		echo "<script>alert('Rut inválido, ingréselo nuevamente')</script>";
+		echo "<script>alert('Rut invï¿½lido, ingrï¿½selo nuevamente')</script>";
 		echo $PAG_ANT;
 	}else
 	//Valida campos obligatorios
@@ -155,9 +154,9 @@ if (isset($_POST['guardar'])){
 		echo "<script>alert('Todos los datos son obligatorios')</script>";
 		echo $PAG_ANT;
 	}else
-	//Valida campos teléfonos
+	//Valida campos telï¿½fonos
 	if(validarTelefono($a[4])==true or validarTelefono($a[5])==true){
-		echo "<script>alert('Corrija los teléfonos. Recuerde que sólo pueden escribir números')</script>";
+		echo "<script>alert('Corrija los telï¿½fonos. Recuerde que sï¿½lo pueden escribir nï¿½meros')</script>";
 		echo $PAG_ANT;
 	} else 
 	//Valida comuna
@@ -167,15 +166,15 @@ if (isset($_POST['guardar'])){
 	} else
 	//Valida e-mail
 	if(validarMail($a[6])==true){
-		echo "<script>alert('Corrija el correo electrónico')</script>";
+		echo "<script>alert('Corrija el correo electrï¿½nico')</script>";
 		echo $PAG_ANT;
 	} else
 	
-	//Si pasa todos los IF, intenta guardar la información
+	//Si pasa todos los IF, intenta guardar la informaciï¿½n
 		if ($institucion->addInstitucion($a))
-			echo "<script>alert('Se han registrado correctamente los datos de la Institución')</script>";
+			echo "<script>alert('Se han registrado correctamente los datos de la Instituciï¿½n')</script>";
 		else
-			echo "<script>alert('Se ha generado un problema al registrar la Institución')</script>";
+			echo "<script>alert('Se ha generado un problema al registrar la Instituciï¿½n')</script>";
 	
 }
 
@@ -196,24 +195,24 @@ if (isset($_POST['modificar'])){
 		echo "<script>alert('Todos los datos son obligatorios')</script>";
 		echo $PAG_ANT;
 	}else
-	//Valida campos teléfonos
+	//Valida campos telï¿½fonos
 	if(validarTelefono($a[4])==true or validarTelefono($a[5])==true){
-		echo "<script>alert('Corrija los teléfonos. Recuerde que deben tener mínimo 7 dígitos')</script>";
+		echo "<script>alert('Corrija los telï¿½fonos. Recuerde que deben tener mï¿½nimo 7 dï¿½gitos')</script>";
 		echo $PAG_ANT;
 	} else 
 	//Valida e-mail
 	if(validarMail($a[6])==true){
-		echo "<script>alert('Corrija el correo electrónico')</script>";
+		echo "<script>alert('Corrija el correo electrï¿½nico')</script>";
 		echo $PAG_ANT;
 	} else
 	
-	//Si pasa todos los IF, intenta guardar la información
+	//Si pasa todos los IF, intenta guardar la informaciï¿½n
 	if ($institucion->updateInstitucion($id, $a)){
 		echo "<script>alert('Se ha modificado correctamente los datos solicitados')</script>";
 		echo "<script>window.open('instituciones.php','_self')</script>";
 	}
 	else{
-		echo "<script>alert('Se ha generado un problema al modificar los datos de institución')</script>";
+		echo "<script>alert('Se ha generado un problema al modificar los datos de instituciï¿½n')</script>";
 		echo "<script>window.open('instituciones.php','_self')</script>";
 	}
 }
@@ -320,7 +319,7 @@ de Institucion</legend>
 </table>
 </fieldset>
 <br>
-<fieldset><legend class="texto_adm_negrita">Mantención de Institución</legend>
+<fieldset><legend class="texto_adm_negrita">Mantenciï¿½n de Instituciï¿½n</legend>
 
 <table id="flex1" style="display:none"></table>
 

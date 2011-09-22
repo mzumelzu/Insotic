@@ -7,16 +7,9 @@
   
  
 <?php include_once("properties/propiedades.php")?>
-<<<<<<< HEAD
 <?php include_once("validaciones.php")?>
 
-//new line.
-=======
-<?php include_once("validaciones.php")
-/// qjhdguad
-// mala
-?>
->>>>>>> 415291af7fc322fcf07f904caa34322ee70e5d6a
+
 
 
 <link rel="stylesheet" type="text/css" href="css/flexigrid.css" />
@@ -32,14 +25,14 @@ $(document).ready(function(){
 			dataType: 'json',
 			colModel : [
 				{display: 'RUT', name : 'id', width : 40, sortable : true, align: 'center'},
-				{display: 'Apellido paterno', name : 'iso', width : 90, sortable : true, align: 'center'},
-				{display: 'Apellido materno', name : 'name', width : 90, sortable : true, align: 'left'},
-				{display: 'Nombres', name : 'name', width : 80, sortable : true, align: 'left'},
-				{display: 'Sexo', name : 'name', width : 30, sortable : true, align: 'left'},
-				{display: 'Fec. nacimiento', name : 'numcode', width : 80, sortable : true, align: 'right'},
-				{display: 'Regiï¿½n de desempeï¿½o', name : 'iso3', width : 120, sortable : true, align: 'left'},
-				{display: 'Escolaridad', name : 'iso3', width : 80, sortable : true, align: 'left'},
-				{display: 'Grp. oper', name : 'iso3', width : 100, sortable : true, align: 'left'},
+				{display: 'Apellido paterno', name : 'rut_trabajador', width : 90, sortable : true, align: 'center'},
+				{display: 'Apellido materno', name : 'rut_empresa', width : 90, sortable : true, align: 'left'},
+				{display: 'Nombres', name : 'id_grupo_operacional', width : 80, sortable : true, align: 'left'},
+				{display: 'Sexo', name : 'id_region', width : 30, sortable : true, align: 'left'},
+				{display: 'Fec. nacimiento', name : 'estado', width : 80, sortable : true, align: 'right'},
+				{display: 'Región de desempeño', name : 'id_region', width : 120, sortable : true, align: 'left'},
+				{display: 'Escolaridad', name : 'estado', width : 80, sortable : true, align: 'left'},
+				{display: 'Grp. oper', name : 'id_grupo_operacional', width : 100, sortable : true, align: 'left'},
 				],
 			buttons : [
 				{name: 'Agregar', bclass: 'add', onpress : test},
@@ -75,17 +68,17 @@ $(document).ready(function(){
 
 				],
 			searchitems : [
-				{display: 'ISO', name : 'iso'},
-				{display: 'Name', name : 'name', isdefault: true}
+				{display: 'id', name : 'id'},
+				{display: 'Apellido paterno', name : 'rut_trabajador', isdefault: true}
 				],
 			sortname: "id",
 			sortorder: "asc",
 			usepager: true,
-			title: 'Grilla de Paises',
+			title: 'Nómina empleados',
 			useRp: true,
 			rp: 10,
 			showTableToggleBtn: true,
-			width: 800,
+			width: 820,
 			height: 255
 			}
 			);   
@@ -134,8 +127,8 @@ function test(com,grid)
 </head>
 <?php
 
-//@author Nicolï¿½s Palma Silva
-
+//@author Nicolás Palma Silva
+/*
 
 if (isset($_POST['guardar'])){ 
 	$a[0] = $_POST['id'];
@@ -148,11 +141,11 @@ if (isset($_POST['guardar'])){
 	$ver  = $_POST['verificador'];
 	$a[7] = $_POST['nombre_contacto'];
 	
-	include_once('../controller/class_institucion.php');
+	include_once('../controller/class_nomina.php');
 	$institucion = new institucion(); 
 	//Valida rut
 	if(mod11($a[0], $ver)==true or $ver==""){
-		echo "<script>alert('Rut invï¿½lido, ingrï¿½selo nuevamente')</script>";
+		echo "<script>alert('Rut inválido, ingréselo nuevamente')</script>";
 		echo $PAG_ANT;
 	}else
 	//Valida campos obligatorios
@@ -160,9 +153,9 @@ if (isset($_POST['guardar'])){
 		echo "<script>alert('Todos los datos son obligatorios')</script>";
 		echo $PAG_ANT;
 	}else
-	//Valida campos telï¿½fonos
+	//Valida campos teléfonos
 	if(validarTelefono($a[4])==true or validarTelefono($a[5])==true){
-		echo "<script>alert('Corrija los telï¿½fonos. Recuerde que sï¿½lo pueden escribir nï¿½meros')</script>";
+		echo "<script>alert('Corrija los teléfonos. Recuerde que sólo pueden escribir números')</script>";
 		echo $PAG_ANT;
 	} else 
 	//Valida comuna
@@ -172,15 +165,15 @@ if (isset($_POST['guardar'])){
 	} else
 	//Valida e-mail
 	if(validarMail($a[6])==true){
-		echo "<script>alert('Corrija el correo electrï¿½nico')</script>";
+		echo "<script>alert('Corrija el correo electrónico')</script>";
 		echo $PAG_ANT;
 	} else
 	
-	//Si pasa todos los IF, intenta guardar la informaciï¿½n
+	//Si pasa todos los IF, intenta guardar la información
 		if ($institucion->addInstitucion($a))
-			echo "<script>alert('Se han registrado correctamente los datos de la Instituciï¿½n')</script>";
+			echo "<script>alert('Se han registrado correctamente los datos de la Institución')</script>";
 		else
-			echo "<script>alert('Se ha generado un problema al registrar la Instituciï¿½n')</script>";
+			echo "<script>alert('Se ha generado un problema al registrar la Institución')</script>";
 	
 }
 
@@ -201,60 +194,42 @@ if (isset($_POST['modificar'])){
 		echo "<script>alert('Todos los datos son obligatorios')</script>";
 		echo $PAG_ANT;
 	}else
-	//Valida campos telï¿½fonos
+	//Valida campos teléfonos
 	if(validarTelefono($a[4])==true or validarTelefono($a[5])==true){
-		echo "<script>alert('Corrija los telï¿½fonos. Recuerde que deben tener mï¿½nimo 7 dï¿½gitos')</script>";
+		echo "<script>alert('Corrija los teléfonos. Recuerde que deben tener mínimo 7 dígitos')</script>";
 		echo $PAG_ANT;
 	} else 
 	//Valida e-mail
 	if(validarMail($a[6])==true){
-		echo "<script>alert('Corrija el correo electrï¿½nico')</script>";
+		echo "<script>alert('Corrija el correo electrónico')</script>";
 		echo $PAG_ANT;
 	} else
 	
-	//Si pasa todos los IF, intenta guardar la informaciï¿½n
+	//Si pasa todos los IF, intenta guardar la información
 	if ($institucion->updateInstitucion($id, $a)){
 		echo "<script>alert('Se ha modificado correctamente los datos solicitados')</script>";
 		echo "<script>window.open('instituciones.php','_self')</script>";
 	}
 	else{
-		echo "<script>alert('Se ha generado un problema al modificar los datos de instituciï¿½n')</script>";
+		echo "<script>alert('Se ha generado un problema al modificar los datos de institución')</script>";
 		echo "<script>window.open('instituciones.php','_self')</script>";
 	}
 }
-
-if ($_GET['accion']=='modificar'){
+*/
+if ($_GET['accion']=='buscar'){
 	$readonly = "readonly=readonly";
-	include_once('../controller/class_institucion.php');
-	$institucion = new institucion();
-	$id = $_GET['id'];
-	$r = $institucion->getInstitucionById($id);
+	include_once('../controller/class_nomina.php');
+	$empresa = new empresa();
+	$rut = $_POST['rutt'];
+	$r = $empresa->getEmpresaByRut($rut);
 	$fila = mysql_fetch_object($r); 
-	$id = $fila->id;
+	$rut = $fila->rut;
+	$contacto_capacitacion = $fila->contacto_capacitacion;
+	$nombre_rrhh = $fila->nombre_rrhh;
 	$nombre = $fila->nombre;
-	$direccion = $fila->direccion;
-	$comuna = $fila->insotic_comuna_id;
-	$nombre_contacto = $fila->insotic_nombre_contacto;
-	$telefono1 = $fila->telefono1;
-	$telefono2 = $fila->telefono2;
-	$e_mail = $fila->e_mail;
-	$n=$id;
-	$s=1;
-	for($m=0; $n!=0; $n/=10)
-	$s=($s+$n%10*(9-$m++%6))%11;
-	$verificador = $s-1;
-}
-
-if ($_GET['accion']=='eliminar'){ 
-	include_once('../controller/class_institucion.php');
-	$institucion = new institucion();
-	$id = $_GET['id'];
-	$institucion->deleteInstitucionById($id);
-	echo "<script>window.open('instituciones.php','_self')</script>";
-}
-
-	
-		
+	$telefono_1 = $fila->telefono_1;
+	$fono_rrhh = $fila->fono_rrhh;
+}		
 
 ?>
 
@@ -265,59 +240,44 @@ if ($_GET['accion']=='eliminar'){
 	
 ?>
 <br>
-<fieldset><legend class="texto_adm_negrita">Registro
-de Institucion</legend>
+<fieldset><legend class="texto_adm_negrita">Institución</legend>
 <table style="text-align: left; width: 100%;" border="0" cellpadding="0"
  cellspacing="0">
   <tbody>
     <tr>
-      <td><form action="instituciones.php" method="post" name="frmInstitucion" id="frmInstitucion">
+      <td><form action="nomina_trabajadores.php?accion=buscar" method="post" name="frmInstitucion" id="frmInstitucion">
         <table width="1094" border="0" cellpadding="4" cellspacing="4">
           <tr>	
             <td width="95" class="texto_adm" ><div align="left">Rut empresa </div></td>
             <td width="6" class="texto_adm"><div align="left">:</div></td>
             <td width="301" ><div align="left">
-              <input name="id" style="width:150px" value="<?php echo $id;?>" maxlength="9" <?php echo $readonly;?>>
+              <input name="rutt" style="width:150px" value="<?php echo $rut;?>" maxlength="9">
 -              
-<input name="verificador" style=" width:31px" value="<?php echo $verificador; ?>" maxlength="1" <?php echo $readonly;?>/>
+<input name="verificador" style=" width:31px" value="<?php echo $verificador; ?>" maxlength="1"/>
             </div></td>
             <td width="144" class="texto_adm" ><div align="left">Nombre o raz&oacute;n social </div></td>
             <td width="6" class="texto_adm"><div align="left">:</div></td>
-            <td width="466" ><input name="nombre2" value="<?php echo $nombre;?>" style="width:200px" /></td>
+            <td width="466" class="texto_adm"><?php echo $nombre;?></td>
           </tr>
           <tr>
             <td class="texto_adm" ><div align="left">Contacto</div></td>
             <td class="texto_adm"><div align="left">:</div></td>
-            <td ><div align="left">
-              <input name="nombre" value="<?php echo $nombre;?>" style="width:200px">
+            <td class="texto_adm"><div align="left"><?php echo $contacto_capacitacion;?>
             </div></td>
             <td class="texto_adm" ><div align="left">Tel&eacute;fono</div></td>
             <td width="6" class="texto_adm"><div align="left">:</div></td>
-            <td ><input name="nombre3" value="<?php echo $nombre;?>" style="width:200px" /></td>
+            <td class="texto_adm"><?php echo $telefono_1;?></td>
           </tr>
           <tr>
             <td class="texto_adm" ><div align="left">Gerente RRHH </div></td>
             <td class="texto_adm" ><div align="left">:</div></td>
-            <td><input name="direccion" value="<?php echo $direccion; ?>" style="width:200px"/></td>
+            <td class="texto_adm"><?php echo $nombre_rrhh; ?></td>
             <td class="texto_adm" ><div align="left">Tel&eacute;fono Gerente RRHH </div></td>
             <td width="6" class="texto_adm"><div align="left">:</div></td>
-            <td><input name="nombre4" value="<?php echo $nombre;?>" style="width:200px" /></td>
+            <td class="texto_adm"><?php echo $fono_rrhh;?></td>
           </tr>
+		<td class="texto_adm"><input type="submit" name="rut" style="width:150px" value="Buscar" maxlength="9"></td>
         </table>
-		<?php
-			if ($_GET['accion']=='modificar'){ ?>
-				<input name="modificar" value="Modificar" type="submit">
-                <input name="cancelar" value="Cancelar" type="submit">
-
-		<?php } 
-		 	else
-			{
-			
-		 ?>
-		 		<input name="guardar" value="Guardar" type="submit">
-		 <?php
-		 	}
-		 ?>
             </form>
      </td>
     </tr>
@@ -325,7 +285,7 @@ de Institucion</legend>
 </table>
 </fieldset>
 <br>
-<fieldset><legend class="texto_adm_negrita">Mantenciï¿½n de Instituciï¿½n</legend>
+<fieldset><legend class="texto_adm_negrita">Nómina empleados</legend>
 
 <table id="flex1" style="display:none"></table>
 

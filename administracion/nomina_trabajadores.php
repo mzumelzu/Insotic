@@ -7,9 +7,16 @@
   
  
 <?php include_once("properties/propiedades.php")?>
+<<<<<<< HEAD
 <?php include_once("validaciones.php")?>
 
 //new line.
+=======
+<?php include_once("validaciones.php")
+/// qjhdguad
+// mala
+?>
+>>>>>>> 415291af7fc322fcf07f904caa34322ee70e5d6a
 
 
 <link rel="stylesheet" type="text/css" href="css/flexigrid.css" />

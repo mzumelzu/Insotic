@@ -1,6 +1,9 @@
 //xd
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+/// agregué esto
+//esto más
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
     	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
@@ -9,6 +12,7 @@
 		<?php include_once("properties/propiedades.php")?>
 	</head>
 	//lol
+	// listoco
 	//jajaja
 	<?php
 		if (isset($_POST['guardar']))
@@ -139,7 +143,7 @@
 			</fieldset>
 		<br>
 	<fieldset>
-    	<legend class="texto_adm_negrita">Mantención de Trabajadores</legend>
+    	<legend class="texto_adm_negrita">Mantenci?n de Trabajadores</legend>
 			<table width="100%" border="0" cellspacing="2" cellpadding="2">
 				<tr>
 			    	<th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">RUT</th>

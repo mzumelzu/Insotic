@@ -7,9 +7,9 @@
   
  
 <?php include_once("properties/propiedades.php")?>
-<?php include_once("validaciones.php")
+<?php include_once("validaciones.php")?>
 
-?>
+//new line.
 
 
 <link rel="stylesheet" type="text/css" href="css/flexigrid.css" />

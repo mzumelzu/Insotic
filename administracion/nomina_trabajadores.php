@@ -7,7 +7,9 @@
   
  
 <?php include_once("properties/propiedades.php")?>
-<?php include_once("validaciones.php")?>
+<?php include_once("validaciones.php")
+//hola
+?>
 
 
 

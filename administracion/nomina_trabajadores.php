@@ -8,15 +8,9 @@
  
 <?php include_once("properties/propiedades.php")?>
 <?php include_once("validaciones.php")
-<<<<<<< HEAD
-//hola
-//nueva
-=======
->>>>>>> 20e5ed6dd85878fed914dfae94e64eb2fa2481d6
+
 ?>
 
-
-//// otra linea
 
 <link rel="stylesheet" type="text/css" href="css/flexigrid.css" />
 <script type="text/javascript" src="jquery-1.2.3.pack.js"></script>

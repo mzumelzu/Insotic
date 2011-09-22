@@ -1,23 +1,16 @@
-//xd
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-/// agregué esto
-//esto más
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
     	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
 		<title>Administracion de Empresas</title>
 		<link href="../css/administracion.css" rel="stylesheet" type="text/css" />
 		<?php include_once("properties/propiedades.php")?>
+<script type="text/javascript" src="validacion/validaciones.js"></script>
 	</head>
-	//lol
-	// listoco
-	//jajaja
 	<?php
 		if (isset($_POST['guardar']))
 			{
-				$a[0] = $_POST['rut'];
+				$a[0] = $_POST['rut'].$_POST['dv'];
 				$a[1] = $_POST['nombres'];
 				$a[2] = $_POST['apellido_paterno'];
 				$a[3] = $_POST['apellido_materno'];
@@ -59,7 +52,7 @@
 				$rutGet = $_GET['rut'];
 				$r = $trabajadores->getTrabajadorByRut($rutGet);
 				$fila = mysql_fetch_object($r);
-				$rut = $fila->rut;
+				$rut = $fila -> rut;
 				$nombres = $fila->nombres;
 				$apellido_paterno = $fila->apellido_paterno;
 				$apellido_materno = $fila->apellido_materno;
@@ -88,11 +81,23 @@
 				    	<tr>
 					    	<td><form action="trabajadores.php" method="post" name="frmTrabajador" id="frmTrabajador">
 						        <table width="652" border="0" cellpadding="4" cellspacing="4">
-									<tr>
-							            <td width="134" class="texto_adm" ><div align="left">RUT trabajador</div></td>
-							            <td width="14" class="texto_adm"><div align="left">:</div></td>
-							            <td width="202" ><div align="left"><input name="rut" value="<?php echo $rut;?>"<?php echo $readonly;?>></div></td>
-						          	</tr>
+			<?php
+			if($_GET['accion'] == 'modificar')
+			{?>
+			<tr>
+			<td width="134" class="texto_adm" ><div align="left">RUT trabajador</div></td>
+			<td width="14" class="texto_adm"><div align="left">:</div>
+			</td><td width="202" ><div align="left"><input name="rut" value="<?php echo $_GET['rut'];?>" <?php echo $readonly;?> maxlength="9" size="9"></div></td>
+			</tr>
+			<?php }
+			else
+			{?>
+			<tr>
+			<td width="134" class="texto_adm" ><div align="left">RUT trabajador</div></td>
+			<td width="14" class="texto_adm"><div align="left">:</div></td>
+			<td width="202" ><div align="left"><input name="rut" value="<?php echo $rut;?>"<?php echo $readonly;?> onkeypress="return validar_numeric(event)" maxlength="8" size="8"> - <input name="dv" value="<?php echo $dv;?>" keyonpress="return validar_dv" maxlength="1" size="1" onkeypress="return validar_numeric_k(event)"></div></td>
+			</tr>
+			<?php }?>
 						          	<tr>
 						            	<td class="texto_adm" ><div align="left">Nombres del trabajador</div></td>
 							            <td class="texto_adm"><div align="left">:</div></td>
@@ -122,7 +127,7 @@
 						          	<tr>
 							            <td class="texto_adm"><div align="left">ID escolaridad asociada al trabajador</div></td>
 							            <td class="texto_adm"><div align="left">:</div></td>
-							            <td><div align="left"><input name="insotec_escolaridad_id" value="<?php echo $insotec_escolaridad_id;?>" maxlength="1"></div></td>
+							            <td><div align="left"><input name="insotec_escolaridad_id" value="<?php echo $insotec_escolaridad_id;?>" maxlength="1" onkeypress="return validar_numeric(event)"></div></td>
 							        </tr>
 					        	</table>
 								<?php
@@ -143,7 +148,7 @@
 			</fieldset>
 		<br>
 	<fieldset>
-    	<legend class="texto_adm_negrita">Mantenci?n de Trabajadores</legend>
+    	<legend class="texto_adm_negrita">Mantención de Trabajadores</legend>
 			<table width="100%" border="0" cellspacing="2" cellpadding="2">
 				<tr>
 			    	<th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">RUT</th>

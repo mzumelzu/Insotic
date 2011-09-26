@@ -67,9 +67,12 @@
 	
 		if( validarDatosAporteEmpresa($datos) ){
 			$aporteEmpresa = new AporteEmpresa();
-			if( $aporteEmpresa->updateAporteEmpresaByRecibo($datos) )
-				echo "true";
-			else
+			if( $aporteEmpresa->updateAporteEmpresaByRecibo($datos) ){
+				if( updateCuentaCorriente($datos) )
+					echo "true";
+				else
+					echo "false";
+			}else
 				echo "false";
 		}else{
 			echo "error";
@@ -131,32 +134,93 @@
 	function addCuentaCorriente($datos){
 		$cuentaCorriente = new CuentaCorriente();
 		
-		$a[1] = $datos[0].$datos[1];
-		$a[2] = "D";
-		$fAux = explode("/",$datos[2]);
-		$a[4] = $fAux[0];
-		$a[5] = $datos[2];
-		$a[6] = $datos[3];
+		$a[1] = $datos[0].$datos[1]; //rut empresa
+		$a[2] = "D"; //tipo movimiento
+		$fAux = explode("/",$datos[2]); 
+		$a[4] = $fAux[0]; //año
+		$a[5] = $datos[2]; //fecha
+		$a[6] = $datos[3]; //recibo
 		
 		if( $datos[4] > 0 ){
-			$a[0] = "01";
-			$a[3] = $datos[4];
+			$a[0] = "01"; //tipo cuenta
+			$a[3] = $datos[4]; //monto cta
 			if( $cuentaCorriente->addCuentaCorriente($a) )
-				$r = actualizaSaldo($a);
+				$r = addSaldo($a);
 		}
 		if( $datos[5] > 0 ){
-			$a[0] = "02";
-			$a[3] = $datos[5];
+			$a[0] = "02"; //tipo cuenta
+			$a[3] = $datos[5]; //monto cta
 			if( $cuentaCorriente->addCuentaCorriente($a) )
-				$r &= actualizaSaldo($a);
+				$r &= addSaldo($a);
 		}
 		if( $datos[7] > 0 ){
-			$a[0] = "03";
-			$a[3] = $datos[7];
+			$a[0] = "03"; //tipo cuenta
+			$a[3] = $datos[7]; //monto cta
 			if( $cuentaCorriente->addCuentaCorriente($a) )
-				$r &= actualizaSaldo($a);
+				$r &= addSaldo($a);
 		}
 		
+		return $r;
+	}
+	
+	/**
+	*
+	* Funcion que se encarga de actualizar los registros de cuentas corrientes para los tipos de cuenta a los que se les modificó un aporte.
+	* Fecha de Creación: 13/09/2011
+	* @author Pablo López M.
+	* @param Array $datos - Arreglo que contiene los datos ingresados la modificacion del aporte de empresa.
+	* @return Boolean - True si las modificaciones son correctas, false si ocurre un error.
+	*/
+	function updateCuentaCorriente($datos){
+		$cuentaCorriente = new CuentaCorriente();
+	
+		$a[1] = $datos[0].$datos[1]; //rut empresa
+		$a[2] = "D"; //tipo movimiento
+		$fAux = explode("/",$datos[2]);
+		$a[4] = $fAux[0]; //año
+		$a[5] = $datos[2]; //fecha
+		$a[6] = $datos[3]; //recibo
+		
+		if( $datos[4] > 0 ){
+			$a[0] = "01"; //tipo cuenta
+			$a[3] = $datos[4]; //monto cta
+			if( $cta = $cuentaCorriente->getCuentaCorrienteUpdate($a) ){
+				$fila = mysql_fetch_object($cta);
+				$monto = $fila->monto_movimiento;
+				$a[7]  = $fila->id_cuenta_corriente;
+				if( $cuentaCorriente->updateCuentaCorriente($a) ){
+					$a[3] -= $monto;
+					$r = addSaldo($a);
+				}					
+			}			
+		}
+		if( $datos[5] > 0 ){
+			$a[0] = "02"; //tipo cuenta
+			$a[3] = $datos[5]; //monto cta
+			if( $cta = $cuentaCorriente->getCuentaCorrienteUpdate($a) ){
+				$fila = mysql_fetch_object($cta);
+				$monto = $fila->monto_movimiento;
+				$a[7]  = $fila->id_cuenta_corriente;
+				if( $cuentaCorriente->updateCuentaCorriente($a) ){
+					$a[3] -= $monto;
+					$r = addSaldo($a);
+				}					
+			}
+		}
+		if( $datos[7] > 0 ){
+			$a[0] = "03"; //tipo cuenta
+			$a[3] = $datos[7]; //monto cta
+			if( $cta = $cuentaCorriente->getCuentaCorrienteUpdate($a) ){
+				$fila = mysql_fetch_object($cta);
+				$monto = $fila->monto_movimiento;
+				$a[7]  = $fila->id_cuenta_corriente;
+				if( $cuentaCorriente->updateCuentaCorriente($a) ){
+					$a[3] -= $monto;
+					$r = addSaldo($a);
+				}					
+			}
+		}
+	
 		return $r;
 	}
 	
@@ -168,23 +232,26 @@
 	 * @param Array $datos - Arreglo que contiene los datos ingresados en el aporte de empresa.
 	 * @return Boolean - True si las inserciones son correctas, false si ocurre un error.
 	 */
-	function actualizaSaldo($a){
-		$datosSaldo[0] = $a[1];
-		$datosSaldo[1] = $a[4];
-		$datosSaldo[2] = $a[0];
+	function addSaldo($a){
+		$datosSaldo[0] = $a[1]; //rut empresa
+		$datosSaldo[1] = $a[4]; //año
+		$datosSaldo[2] = $a[0]; //tipo cuenta
 		
 		$empresaSaldo = new EmpresaSaldo();
 		$saldo = $empresaSaldo->getSaldoEmpresa($datosSaldo);
 		if( !$saldo ){
 			$debe = 0;
+			$haber = 0;
 			if( !$empresaSaldo->addEmpresaSaldo($datosSaldo) )
 				return false;
 		}else{
 			$fila = mysql_fetch_object($saldo);
 			$debe = $fila->debe;
+			$haber = $fila->haber;
 		}		
 		$datosSaldo[3] = $debe + $a[3];
-		return $empresaSaldo->updateSaldoDebe($datosSaldo);
+		$datosSaldo[4] = $haber;
+		return $empresaSaldo->updateSaldo($datosSaldo);
 		
 	}
 	

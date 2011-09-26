@@ -54,41 +54,20 @@ class EmpresaSaldo{
 	
 	/**
 	 *
-	 * Función encargada de actualizar el campo Debe de un registro de saldo de empresa de la base de datos.
+	 * Función encargada de actualizar el saldo de una cuenta especifica de empresa de la base de datos.
 	 * @param array $a - Arreglo que contiene los datos nuevos para realizar la modificación del registro.
 	 * @return boolean - True si la modificación es exitosa, false en caso contrario.
 	 */
-	function updateSaldoDebe($a){
+	function updateSaldo($a){
 		$sql = "UPDATE insotic_empresa_saldo SET 
-					debe = $a[3]
+					debe = $a[3],
+					haber = $a[4] 
 				WHERE rut_empresa = $a[0]
 				AND year = $a[1] 
 				AND tipo_cuenta = '$a[2]'";
 		$this->conectar();
 		if(mysql_query ($sql)){
 			return true;				
-		}
-		else{
-			return false;
-	
-		}
-	}
-	
-	/**
-	 *
-	 * Función encargada de actualizar el campo Haber de un registro de saldo de empresa de la base de datos.
-	 * @param array $a - Arreglo que contiene los datos nuevos para realizar la modificación del registro.
-	 * @return boolean - True si la modificación es exitosa, false en caso contrario.
-	 */
-	function updateSaldoHaber($a){
-		$sql = "UPDATE insotic_empresa_saldo SET
-						haber = $a[4]
-					WHERE rut_empresa = $a[0]
-					AND year = $a[1] 
-					AND tipo_cuenta = '$a[2]'";
-		$this->conectar();
-		if(mysql_query ($sql)){
-			return true;
 		}
 		else{
 			return false;

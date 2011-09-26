@@ -62,7 +62,7 @@ class CuentaCorriente{
 	 * @param int $a - Arreglo que contiene los datos que se usarán para realizar la modificacion.
 	 * @return boolean - True si la modificación es exitosa, false en caso contrario.
 	 */
-	function updateCuentaCorrienteByRecibo($a){
+	function updateCuentaCorriente($a){
 		$sql = "UPDATE insotic_cuenta_corriente SET
 					tipo_cuenta_corriente = '$a[0]',
 					rut_empresa = '$a[1]', 
@@ -84,7 +84,7 @@ class CuentaCorriente{
 	
 	/**
 	*
-	* Función encargada de buscar un registro especifico de cuenta corriente segun una combinacion de año. tipo de cuenta y empresa.
+	* Función encargada de buscar un registro especifico de cuenta corriente segun una combinacion de año, tipo de cuenta y empresa.
 	* @param int $a - Arreglo que contiene los datos que se usarán para realizar la consulta.
 	* @return resource - Recurso que contiene los datos devueltos por la consulta a la base de datos. En caso de error retorna false.
 	*/
@@ -94,6 +94,30 @@ class CuentaCorriente{
 				rut_empresa = '$a[1]' AND 
 				tipo_movimiento = '$a[2]' AND 
 				ano_movimiento = $a[4]";
+		$this->conectar();
+		$r = mysql_query ($sql);
+		if (mysql_num_rows($r)==0) {
+			return false;
+		}
+		else {
+			return $r;
+		}
+	}
+	
+	/**
+	*
+	* Función encargada de buscar un registro especifico de cuenta corriente segun una combinacion de año, tipo de cuenta,
+	* tipo de movimiento, empresa y numero de aporte de empresa.
+	* @param int $a - Arreglo que contiene los datos que se usarán para realizar la consulta.
+	* @return resource - Recurso que contiene los datos devueltos por la consulta a la base de datos. En caso de error retorna false.
+	*/
+	function getCuentaCorrienteUpdate($a){
+		$sql = "SELECT monto_movimiento, id_cuenta_corriente FROM insotic_cuenta_corriente WHERE
+					tipo_cuenta_corriente = '$a[0]' AND
+					rut_empresa = '$a[1]' AND 
+					tipo_movimiento = '$a[2]' AND 
+					ano_movimiento = $a[4] AND 
+					numero_aporte_empresa = $a[6]";
 		$this->conectar();
 		$r = mysql_query ($sql);
 		if (mysql_num_rows($r)==0) {

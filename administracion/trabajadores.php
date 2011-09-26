@@ -1,27 +1,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-    	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
-		<title>Administracion de Empresas</title>
-		<link href="../css/administracion.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Infotic</title>
+<link rel="stylesheet" type="text/css" href="../css/menu.css">
+<link rel="stylesheet" type="text/css" href="../css/administracion.css">
 		<?php include_once("properties/propiedades.php")?>
 <script type="text/javascript" src="validacion/validaciones.js"></script>
 	</head>
 	<?php
 		if (isset($_POST['guardar']))
 			{
-				$a[0] = $_POST['rut'].$_POST['dv'];
-				$a[1] = $_POST['nombres'];
-				$a[2] = $_POST['apellido_paterno'];
-				$a[3] = $_POST['apellido_materno'];
-				$a[4] = $_POST['sexo'];
-				$a[5] = $_POST['insotec_escolaridad_id'];
-				include_once('../controller/class_trabajador.php');
-				$trabajadores = new trabajador();
-				if($trabajadores->addTrabajador($a))
-					echo "<script>alert('Se han registrado correctamente los datos del trabajador.')</script>";
+				include_once('validacion/validaciones.php');
+				if(dv($_POST['rutAux']) == $_POST['dv'])
+					{
+						$a[0] = $_POST['rutAux'].$_POST['dv'];
+						$a[1] = $_POST['nombres'];
+						$a[2] = $_POST['apellido_paterno'];
+						$a[3] = $_POST['apellido_materno'];
+						$a[4] = $_POST['sexo'];
+						$a[5] = $_POST['insotec_escolaridad_id'];
+						include_once('../controller/class_trabajador.php');
+						$trabajadores = new trabajador();
+						if($trabajadores->addTrabajador($a))
+							echo "<script>alert('Se han registrado correctamente los datos del trabajador.')</script>";
+						else
+							echo "<script>alert('Se ha generado un problema al registrar el trabajador.')</script>";
+					}
 				else
-					echo "<script>alert('Se ha generado un problema al registrar el trabajador.')</script>";
+					echo "<script>alert('Rut no valido.')</script>";
 			}
 
 		if (isset($_POST['modificar']))
@@ -70,95 +77,111 @@
 	?>
 
 <body>
-	<?php
-		include('menu_administracion.php');
-	?>
-	<br>
-		<fieldset>
-	        <legend class="texto_adm_negrita">Registro de Trabajadores</legend>
-				<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
+
+<div id="header">
+<div id="contenido">
+<div id="logo"></div>
+<div id="menu_header">
+<?php include('menu_administracion.php'); ?>
+</div><!-- fin menu_header -->
+</div><!-- fin div contenido-->
+</div><!-- fin div header-->
+<div id="wrapper">
+<div id="contenedor">
+<div id="titulo">Registro de Trabajadores</div>
+<?php
+$rutAux = substr($rut, 0, 8);
+$dv = substr($rut, -1, 1);
+?>
+				<table class="uno">
 					<tbody>
 				    	<tr>
 					    	<td><form action="trabajadores.php" method="post" name="frmTrabajador" id="frmTrabajador">
-						        <table width="652" border="0" cellpadding="4" cellspacing="4">
-			<?php
-			if($_GET['accion'] == 'modificar')
-			{?>
+						        <table class="dos">
 			<tr>
-			<td width="134" class="texto_adm" ><div align="left">RUT trabajador</div></td>
-			<td width="14" class="texto_adm"><div align="left">:</div>
-			</td><td width="202" ><div align="left"><input name="rut" value="<?php echo $_GET['rut'];?>" <?php echo $readonly;?> maxlength="9" size="9"></div></td>
+			<td><div id="etiqueta">RUT trabajador :</div></td>
+			<td>
+<input type="text" name="rutAux" style="width:112px" value="<?php echo $rutAux;?>"<?php echo $readonly;?> onkeypress="return validar_numeric(event)" maxlength="8" size="8"> - 
+<input type="text" name="dv" style="width:20px" value="<?php echo $dv;?>" maxlength="1" size="1" onkeypress="return validar_numeric_k(event)">
+<input type="hidden" name="rut" style="width:112px" value="<?php echo $rut;?>"<?php echo $readonly;?>" maxlength="8" size="8">
+</div></td>
 			</tr>
-			<?php }
+			<tr>
+				<td><div id="etiqueta">Nombres del Trabajador :</div></td>
+				<td>
+					<input type="text" name="nombres" value="<?php echo $nombres;?>">
+				</td>
+			</tr>
+			<tr>
+				<td><div id="etiqueta">Apellido Paterno :</div></td>
+				<td>
+					<input type="text" name="apellido_paterno" value="<?php echo $apellido_paterno;?>">
+				</td>
+			</tr>
+			<tr>
+				<td><div id="etiqueta">Apellido Materno :</div></td>
+				<td>
+					<input type="text" name="apellido_materno" value="<?php echo $apellido_materno;?>">
+				</td>
+			</tr>
+			<tr>
+				<td><div id="etiqueta">Sexo :</div></td>
+				<td><div class="styled-select">
+					<?php include_once('../controller/class_trabajador.php');
+					$trabajadores = new trabajador();
+						if ($_GET['accion']=='modificar')
+							$trabajadores->seleccionaTrabajadoresByRutCmb($rut);
+						else
+							$trabajadores->seleccionaTrabajadoresCmb();
+							?>
+				</div></td>
+			</tr>
+			<tr>
+				<td><div id="etiqueta">ID Escolaridad Trabajador :</div></td>
+				<td>
+					<?php
+                		include_once('../controller/class_escolaridad.php');
+						$escolaridad = new Escolaridad();
+						if ($_GET['accion']=='modificar')
+							$escolaridad->seleccionaEscolaridadTrabByIdCmb($insotec_escolaridad_id);
+						else
+							$escolaridad->seleccionaEscolaridadTrabCmb();
+					?>
+				</td>
+			</tr>
+		<tr>
+		<td colspan="2">
+		<?php
+			if ($_GET['accion']=='modificar')
+				{?>
+					<input name="modificar" value="Modificar" type="submit">
+					<input name="cancelar" value="Cancelar" type="submit">
+			<?php } 
 			else
-			{?>
-			<tr>
-			<td width="134" class="texto_adm" ><div align="left">RUT trabajador</div></td>
-			<td width="14" class="texto_adm"><div align="left">:</div></td>
-			<td width="202" ><div align="left"><input name="rut" value="<?php echo $rut;?>"<?php echo $readonly;?> onkeypress="return validar_numeric(event)" maxlength="8" size="8"> - <input name="dv" value="<?php echo $dv;?>" keyonpress="return validar_dv" maxlength="1" size="1" onkeypress="return validar_numeric_k(event)"></div></td>
-			</tr>
-			<?php }?>
-						          	<tr>
-						            	<td class="texto_adm" ><div align="left">Nombres del trabajador</div></td>
-							            <td class="texto_adm"><div align="left">:</div></td>
-							            <td ><div align="left"><input name="nombres" value="<?php echo $nombres;?>"></div></td>
-						          	</tr>
-						          	<tr>
-							            <td class="texto_adm"><div align="left">Apellido paterno del trabajador</div></td>
-							            <td class="texto_adm"><div align="left">:</div></td>
-							            <td><div align="left"><input name="apellido_paterno" value="<?php echo $apellido_paterno;?>"></div></td>
-							        </tr>
-						          	<tr>
-							            <td class="texto_adm"><div align="left">Apellido materno del trabajador</div></td>
-							            <td class="texto_adm"><div align="left">:</div></td>
-							            <td><div align="left"><input name="apellido_materno" value="<?php echo $apellido_materno;?>"></div></td>
-							        </tr>
-						          	<tr>
-										<td class="texto_adm"><div align="left">Sexo</div></td>
-							            <td class="texto_adm"><div align="left">:</div></td>
-										<td><div align="left"><?php include_once('../controller/class_trabajador.php');
-											$trabajadores = new trabajador();
-												if ($_GET['accion']=='modificar')
-													$trabajadores->seleccionaTrabajadoresByRutCmb($rut);
-												else
-													$trabajadores->seleccionaTrabajadoresCmb();
-													?></div></td>
-							        </tr>
-						          	<tr>
-							            <td class="texto_adm"><div align="left">ID escolaridad asociada al trabajador</div></td>
-							            <td class="texto_adm"><div align="left">:</div></td>
-							            <td><div align="left"><input name="insotec_escolaridad_id" value="<?php echo $insotec_escolaridad_id;?>" maxlength="1" onkeypress="return validar_numeric(event)"></div></td>
-							        </tr>
-					        	</table>
-								<?php
-									if ($_GET['accion']=='modificar')
-										{?>
-											<input name="modificar" value="Modificar" type="submit">
-							                <input name="cancelar" value="Cancelar" type="submit">
-									<?php } 
-								 	else
-										{?>
-									 		<input name="guardar" value="Guardar" type="submit">
-									<?php }
-								?></form>
+				{?>
+					<input name="guardar" value="Guardar" type="submit">
+			<?php }
+		?>
+		</td>
+		</tr>
+		</table>
+		</form>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			</fieldset>
-		<br>
-	<fieldset>
-    	<legend class="texto_adm_negrita">Mantención de Trabajadores</legend>
-			<table width="100%" border="0" cellspacing="2" cellpadding="2">
+    	<div id="mantencion">Mantenci&oacute;n de Trabajadores</div>
+		<div id="contenedorDos">
+			<table class="tres">
 				<tr>
-			    	<th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">RUT</th>
-				    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">NOMBRES</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">APELLIDO PATERNO</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">APELLIDO MATERNO</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">SEXO</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">ID ESCOLARIDAD</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">ELIMINAR</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">MODIFICAR</th>
+			    	<th>RUT</th>
+				    <th>NOMBRES</th>
+                    <th>APELLIDO PATERNO</th>
+                    <th>APELLIDO MATERNO</th>
+                    <th>SEXO</th>
+                    <th>ID ESCOLARIDAD</th>
+                    <th>ELIMINAR</th>
+                    <th>MODIFICAR</th>
 				</tr>
 			  	<?php
 			 		include_once('../controller/class_trabajador.php');
@@ -166,6 +189,12 @@
 					$trabajadores->getTrabajador();
 			  	?>
 			</table>
-	</fieldset>
+	</div>
+
+</div><!-- fin div conetendor-->
+<div id="footer">
+</div><!--fin div footer-->
+</div><!-- fin div wrapper-->	
+	
 </body>
 </html>

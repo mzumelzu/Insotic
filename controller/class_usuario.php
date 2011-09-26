@@ -71,11 +71,24 @@ class usuario
 
 	function updateUsuario($id, $a)
 		{
-			$sql = "UPDATE insotic_usuario SET usuario = '$a[1]', clave = '$a[2]' WHERE id = '$id'";
+			$sqlUsuario = "SELECT * FROM insotic_usuario WHERE usuario='$a[1]' and id='$id'";
 			$this->conectar();
-			if(mysql_query ($sql))
-				return true;
+			$r = mysql_query ($sqlUsuario);
+			if(!mysql_num_rows($r)!=0)
+				echo "<script>alert('El nombre de usuario ya existe.')</script>";
 			else
-				return false;
+				{
+					if(!preg_match('/^.*(?=.{6})(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*$/', $a[2]))
+						echo "<script>alert('La contrasena debe ser de 6 caracteres y alfanumerico')</script>";
+					else
+						{
+							$sql = "UPDATE insotic_usuario SET usuario = '$a[1]', clave = '$a[2]' WHERE id = '$id'";
+							$this->conectar();
+							if(mysql_query ($sql))
+								return true;
+							else
+								return false;
+						}
+				}
 		}
 } ?>

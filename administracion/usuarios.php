@@ -1,9 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-    	<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
-		<title>Administracion de Empresas</title>
-		<link href="../css/administracion.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Infotic</title>
+<link rel="stylesheet" type="text/css" href="../css/menu.css">
+<link rel="stylesheet" type="text/css" href="../css/administracion.css">
+
 		<?php include_once("properties/propiedades.php")?>
 	</head>
 
@@ -31,12 +33,12 @@
 				if ($empresa->updateUsuario($id, $a))
 					{
 						echo "<script>alert('Se han modificado correctamente los datos solicitados')</script>";
-						echo "<script>window.open('usuarios.php','_self')</script>";
+						/*echo "<script>window.open('usuarios.php','_self')</script>";*/
 					}
 				else
 					{
 						echo "<script>alert('Se ha generado un problema al modificar los datos del usuario')</script>";
-						echo "<script>window.open('usuarios.php','_self')</script>";
+						/*echo "<script>window.open('usuarios.php','_self')</script>";*/
 					}
 			}
 
@@ -62,33 +64,37 @@
 	?>
 
 <body onLoad="document.frmUsuario.id.focus();">
-	<?php
-		include('menu_administracion.php');
-	?>
-	<br>
-		<fieldset>
-	        <legend class="texto_adm_negrita">Registro de Usuarios</legend>
-				<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
+<div id="header">
+<div id="contenido">
+<div id="logo"></div>
+<div id="menu_header">
+<?php include('menu_administracion.php'); ?>
+</div><!-- fin menu_header -->
+</div><!-- fin div contenido-->
+</div><!-- fin div header-->
+<div id="wrapper">
+<div id="contenedor">
+<div id="titulo">Registro de Usuarios</div>
+				<table class="uno">
 					<tbody>
 				    	<tr>
 					    	<td><form action="usuarios.php" method="post" name="frmUsuario" id="frmUsuario">
-						        <table width="652" border="0" cellpadding="4" cellspacing="4">
-									<tr>
-							            <td width="134" class="texto_adm" ><div align="left">ID usuario</div></td>
-							            <td width="14" class="texto_adm"><div align="left">:</div></td>
-							            <td width="202" ><div align="left"><input name="id" value="<?php echo $id;?>" <?php echo $readonly;?>><input type="hidden" name="id" value="<?php echo $_GET[id];?>"></div></td>
+						        <table class="dos">
+						          	<tr>
+						            	<td><div id="etiqueta">Nombre Usuario :</div></td>
+							            <td>
+											<input type="text" name="usuario" value="<?php echo $usuario;?>">
+											<input type="hidden" name="id" value="<?php echo $_GET[id];?>">
+										</td>
 						          	</tr>
 						          	<tr>
-						            	<td class="texto_adm" ><div align="left">Nombre usuario</div></td>
-							            <td class="texto_adm"><div align="left">:</div></td>
-							            <td ><div align="left"><input name="usuario" value="<?php echo $usuario;?>"></div></td>
-						          	</tr>
-						          	<tr>
-							            <td class="texto_adm"><div align="left">Clave usuario</div></td>
-							            <td class="texto_adm"><div align="left">:</div></td>
-							            <td><div align="left"><input name="clave" value="<?php echo $clave;?>"></div></td>
+							            <td><div id="etiqueta">Clave Usuario :</div></td>
+							            <td>
+											<input type="text" name="clave" value="<?php echo $clave;?>" maxlength="6" size="6">
+										</td>
 							        </tr>
-					        	</table>
+									<tr>
+									<td colspan="2">
 								<?php
 									if ($_GET['accion']=='modificar')
 										{?>
@@ -99,22 +105,24 @@
 										{?>
 									 		<input name="guardar" value="Guardar" type="submit">
 									<?php }
-								?></form>
+								?>
+								</td>
+								</tr>
+								</table>
+								</form>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			</fieldset>
-		<br>
-	<fieldset>
-    	<legend class="texto_adm_negrita">Mantención de Usuarios</legend>
-			<table width="100%" border="0" cellspacing="2" cellpadding="2">
+			<div id="mantencion">Mantenci&oacute;n de Usuarios</div>
+			<div id="contenedorDos">
+			<table class="tres">
 				<tr>
-			    	<th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">ID</th>
-				    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">USUARIO</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">CLAVE</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">ELIMINAR</th>
-                    <th bgcolor="#CCCCCC" class="texto_adm_negrita" scope="col">MODIFICAR</th>
+			    	<th>ID</th>
+				    <th>USUARIO</th>
+                    <th>CLAVE</th>
+                    <th>ELIMINAR</th>
+                    <th>MODIFICAR</th>
 				</tr>
 			  	<?php
 			 		include_once('../controller/class_usuario.php');
@@ -123,15 +131,15 @@
 					while ($f = mysql_fetch_object($r))
 						{?>
 							<tr>
-                                <td class="texto_adm"><?php echo $f->id;?></td>
-                                <td class="texto_adm"><?php echo $f->usuario;?></td>
-                                <td class="texto_adm"><input type = "password" readonly="readonly"  name="pass" value="<?php echo $f->clave;?>" ></td>
-                                <td class="texto_adm"><a href="usuarios.php?accion=eliminar&id=<?php echo $f->id;?>">Eliminar</a></td>
-                                <td class="texto_adm"><a href='usuarios.php?accion=modificar&id=<?php echo $f->id;?>'>Modificar</a></td>
+                                <td><?php echo $f->id;?></td>
+                                <td><?php echo $f->usuario;?></td>
+                                <td><input type="password" readonly="readonly"  name="pass" value="<?php echo $f->clave;?>" ></td>
+                                <td><a class="eliminar" href="usuarios.php?accion=eliminar&id=<?php echo $f->id;?>"></a></td>
+                                <td><a class="modificar" href='usuarios.php?accion=modificar&id=<?php echo $f->id;?>'></a></td>
 						  	</tr>
 						<?php }
 			  	?>
 			</table>
-	</fieldset>
+	</div>
 </body>
 </html>

@@ -17,12 +17,8 @@ class trabajador
 				echo "<script>alert('El trabajador ya existe.')</script>";
 			else
 				{
-					if($a[4]=='masculino')
-						$b=0;
-					else
-						$b=1;
 					$sql = "INSERT INTO insotic_trabajador(rut, nombres, apellido_paterno, apellido_materno, sexo, insotec_escolaridad_id)
-						VALUES('$a[0]', '$a[1]', '$a[2]', '$a[3]', $b, '$a[5]')";
+						VALUES('$a[0]', '$a[1]', '$a[2]', '$a[3]', '$a[4]', '$a[5]')";
 					$this -> conectar();
 					if(mysql_query($sql))
 						return true;
@@ -46,19 +42,19 @@ class trabajador
 					while ($f = mysql_fetch_object($r))
 						{
 							$aux = $f->sexo;
-								if($aux==0)
+								if($aux=="m")
 									$b='masculino';
 								else
 									$b='femenino';
 								echo "<tr>";
-									echo "<td class='texto_adm'>$f->rut</td>";
-									echo "<td class='texto_adm'>$f->nombres</td>";
-									echo "<td class='texto_adm'>$f->apellido_paterno</td>";
-									echo "<td class='texto_adm'>$f->apellido_materno</td>";
-									echo "<td class='texto_adm'>$b</td>";
-									echo "<td class='texto_adm'>$f->insotec_escolaridad_id</td>";
-									echo "<td class='texto_adm'><a href='trabajadores.php?accion=eliminar&rut=$f->rut'>Eliminar</a></td>";
-									echo "<td class='texto_adm'><a href='trabajadores.php?accion=modificar&rut=$f->rut'>Modificar</a></td>";
+									echo "<td>" .substr($f->rut, 0, 8) ." - " .substr($f->rut, -1, 1) ."</td>";
+									echo "<td>$f->nombres</td>";
+									echo "<td>$f->apellido_paterno</td>";
+									echo "<td>$f->apellido_materno</td>";
+									echo "<td>$b</td>";
+									echo "<td>$f->insotec_escolaridad_id</td>";
+									echo "<td><a class='eliminar' href='trabajadores.php?accion=eliminar&rut=$f->rut'></a></td>";
+									echo "<td><a class='modificar' href='trabajadores.php?accion=modificar&rut=$f->rut'></a></td>";
 								echo "</tr>";
 						}
 				}
@@ -90,12 +86,8 @@ class trabajador
 
 	function updateTrabajador($rut, $a)
 		{
-			if($a[4]=='masculino')
-				$b=0;
-			else
-				$b=1;
 			$sql = "UPDATE insotic_trabajador SET nombres = '$a[1]', apellido_paterno = '$a[2]' , apellido_materno = '$a[3]', 
-				sexo = $b, insotec_escolaridad_id = '$a[5]' WHERE rut = '$rut'";
+				sexo = '$a[4]', insotec_escolaridad_id = '$a[5]' WHERE rut = '$rut'";
 			$this -> conectar();
 			if(mysql_query($sql))
 				return true;
@@ -105,9 +97,9 @@ class trabajador
 
 	function seleccionaTrabajadoresCmb()
 		{
-			echo "<select name='sexo' style='width:158px' id = 'sexo'>";
-			echo "<option value='masculino' selected>masculino</option>";
-			echo "<option value='femenino'>femenino</option>";
+			echo "<select name='sexo' id = 'sexo'>";
+			echo "<option value='M' selected>masculino</option>";
+			echo "<option value='F'>femenino</option>";
 			echo "</select>";
 		}
 
@@ -118,26 +110,23 @@ class trabajador
 			$r = mysql_query($sql);
 			if (mysql_num_rows($r)==0)
 				{
-					echo "<script>alert('La consulta de trabajadores no tiene resultados')</script>";
-					die();
+					echo "<select name='sexo' id='sexo'>";
+					echo "</select>";
 				}
 			else
 				{
-					echo "<select name = 'sexo' id='sexo' style='width:158px'>";
+					echo "<select name = 'sexo' id='sexo'>";
 					while($f = mysql_fetch_object($r))
 						{
 							if($f->rut==$rut)
 								{
-									if($f->sexo==0)
-										{
-											echo "<option value='masculino' selected>masculino</option>";
-											echo "<option value='femenino'>femenino</option>";
-										}
-									else
-										{
-											echo "<option value='femenino' selected>femenino</option>";
-											echo "<option value='masculino'>masculino</option>";
-										}
+									echo "<option value='M' selected>masculino</option>";
+									echo "<option value='F'>femenino</option>";
+								}
+							else
+								{
+									echo "<option value='F' selected>femenino</option>";
+									echo "<option value='M'>masculino</option>";
 								}
             			}
 					echo "</select>";

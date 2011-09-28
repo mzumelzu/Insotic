@@ -73,7 +73,7 @@ class empresa{
 		
 	/*function deleteInstitucionById($id){
 		$sql = "delete from insotic_institucion where id='$id'";
-		$this->conectar();
+		$this->conectar(mysql_query ($sql));
 		if(mysql_query ($sql)){
 			echo "<script>alert('Se ha eliminado correctamente la institucion seleccionada')	</script>";
 		} 

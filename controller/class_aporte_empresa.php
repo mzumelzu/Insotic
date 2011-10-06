@@ -108,5 +108,55 @@ class AporteEmpresa{
 			return $r;
 		}
 	}
+		
+	/**
+	*
+	* Función encargada de buscar todos los aportes de empresas de un año especifico.
+	* @param int $anio - Año por el cual se realizará la busqueda.
+	* @return resource - Recurso que contiene los datos devueltos por la consulta a la base de datos. En caso de error retorna false.
+	*/
+	function getAportesEmpresaByAnio($anio){
+		$sql = "SELECT * FROM insotic_aporte 
+				WHERE fecha LIKE '$anio%'";
+		$this->conectar();
+		$r = mysql_query ($sql);
+		if (mysql_num_rows($r)==0) {
+			return false;
+		}
+		else {
+			return $r;
+		}
+	}
+	
+	function getSaldoEmpresaPorAnio($rut, $anio){
+		$sql = "SELECT SUM(monto_capacitacion) AS capacitacion, 
+				SUM(monto_reparto) AS reparto, 
+				SUM(monto_certificacion) AS certificacion 
+				FROM insotic_aporte 
+				WHERE rut_empresa='$rut' AND fecha LIKE '$anio%'";
+		$this->conectar();
+		$r = mysql_query ($sql);
+		if (mysql_num_rows($r)==0) {
+			return false;
+		}
+		else {
+			return $r;
+		}
+	}
+	
+	function getEmpresasByAnio($anio){
+		$sql = "SELECT rut_empresa 
+				FROM insotic_aporte 
+				WHERE fecha LIKE '$anio%' 
+				GROUP BY rut_empresa";
+		$this->conectar();
+		$r = mysql_query ($sql);
+		if (mysql_num_rows($r)==0) {
+			return false;
+		}
+		else {
+			return $r;
+		}
+	}
 	
 }

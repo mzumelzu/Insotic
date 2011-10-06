@@ -19,6 +19,20 @@
 		echo $nombreEmpresa;
 	}
 	
+	if( $_POST["accion"]=="regAportes" ){
+		if( regenerarCtasCtes() ){
+			echo "<br>Restauracion Ctas Ctes Exitosa";
+			
+			if( regenerarSaldos() )
+				echo "<br>Restauracion Saldos Exitosa";
+			else
+				echo "<br>Restauracion Saldos Fallida";
+			
+		}else{
+			echo "<br>Restauracion Ctas Ctes Fallida";
+		}			
+	}
+	
 	if( $_POST["accion"]=="guardar" ){
 		$rutEmpresa = $_POST["rutEmpresa"];
 		$rutEmpresa = str_replace(".", "", $rutEmpresa);
@@ -226,7 +240,8 @@
 	
 	/**
 	 * 
-	 * Funcion que actualiza los saldos de las empresas por año y tipo de cuenta, si no existe un registro especifico, este se creara con saldo 0 y luego se actualizará.
+	 * Funcion que actualiza los saldos de las empresas por año y tipo de cuenta, si no existe un registro especifico, 
+	 * este se creara con saldo 0 y luego se actualizará.
 	 * Fecha de Creación: 13/09/2011
 	 * @author Pablo López M.
 	 * @param Array $datos - Arreglo que contiene los datos ingresados en el aporte de empresa.
@@ -240,7 +255,8 @@
 		$empresaSaldo = new EmpresaSaldo();
 		$saldo = $empresaSaldo->getSaldoEmpresa($datosSaldo);
 		if( !$saldo ){
-			$debe = 0;
+			$datosSaldo[3] = 0;
+			$datosSaldo[4] = 0;
 			$haber = 0;
 			if( !$empresaSaldo->addEmpresaSaldo($datosSaldo) )
 				return false;
@@ -312,6 +328,99 @@
 		}
 		
 		return $valido;
+	}
+	
+	/**
+	 * 
+	 * Función encargada de regenerar las cuentas corrientes de empresas en base a los aportes existentes.
+	 * Fecha de Creación: 05/09/2011
+	 * @author Pablo López M.
+	 * @return boolean - True si la regeneracion es correcta, en caso contrario false.
+	 */
+	function regenerarCtasCtes(){
+		$anio = $_POST["anio"];
+		
+		$ctaCte = new CuentaCorriente();
+		$a[1] = $anio;
+		$a[2] = 'D';
+		$r = $ctaCte->eliminarTodoByAnio($a);
+		
+		$aporteEmpresa = new AporteEmpresa();
+		$aportes = $aporteEmpresa->getAportesEmpresaByAnio($a[1]);
+		$saldos[0] = 0;
+		$saldos[1] = 0;
+		$saldos[2] = 0;
+		
+		while( $fila = mysql_fetch_object($aportes) ){
+			$a[1] = $fila->rut_empresa; //rut_empresa
+			$a[2] = "D"; //tipo movimiento
+			$a[4] = $anio; //año
+			$a[5] = $fila->fecha; //fecha
+			$a[6] = $fila->recibo; //recibo
+			
+			//Cta Capacitiacion
+			$a[0] = "01"; //tipo cta
+			$a[3] = $fila->monto_capacitacion; //monto
+			$saldos[0] += $a[3];		
+			$r &= $ctaCte->addCuentaCorriente($a);
+			
+			//Cta Reparto
+			$a[0] = "02"; //tipo cta
+			$a[3] = $fila->monto_reparto; //monto	
+			$saldos[1] += $a[3];
+			$r &= $ctaCte->addCuentaCorriente($a);
+			
+			//Cta Certificacion
+			$a[0] = "03"; //tipo cta
+			$a[3] = $fila->monto_certificacion; //monto
+			$saldos[2] += $a[3];
+			$r &= $ctaCte->addCuentaCorriente($a);
+		}
+				
+		return $r;
+	}
+	
+	/**
+	*
+	* Función encargada de regenerar los saldos de las cuentas de empresas en base a los aportes existentes.
+	* Fecha de Creación: 05/09/2011
+	* @author Pablo López M.
+	* @return boolean - True si la regeneracion es correcta, en caso contrario false.
+	*/
+	function regenerarSaldos(){
+		$saldoEmpresa = new EmpresaSaldo();
+		$aporteEmpresa = new AporteEmpresa();
+		$anio = $_POST["anio"];
+		
+		$r = false;
+		$r = $saldoEmpresa->eliminarTodoByAnio($anio);
+		
+		$datosSaldo[1] = $anio; //año
+		$datosSaldo[4] = 0; //haber
+		if( $empresas = $aporteEmpresa->getEmpresasByAnio($anio) ){
+			while( $fila = mysql_fetch_object($empresas) ){
+				$datosSaldo[0] = $fila->rut_empresa; //rut empresa
+				$aportes = $aporteEmpresa->getSaldoEmpresaPorAnio($datosSaldo[0], $anio);
+				
+				if( $saldos = mysql_fetch_object($aportes) ){
+					//Cta Capacitiacion
+					$datosSaldo[2] = "01"; //tipo cuenta
+					$datosSaldo[3] = $saldos->capacitacion; //debe		
+					$r &= $saldoEmpresa->addEmpresaSaldo($datosSaldo);
+					
+					//Cta Reparto
+					$datosSaldo[2] = "02"; //tipo cuenta
+					$datosSaldo[3] = $saldos->reparto; //debe
+					$r &= $saldoEmpresa->addEmpresaSaldo($datosSaldo);
+					
+					//Cta Certificacion
+					$datosSaldo[2] = "03"; //tipo cuenta
+					$datosSaldo[3] = $saldos->certificacion; //debe
+					$r &= $saldoEmpresa->addEmpresaSaldo($datosSaldo);
+				}
+			}
+		}
+		return $r;
 	}
 	
 ?>

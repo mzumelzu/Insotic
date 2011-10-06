@@ -41,8 +41,8 @@ class EmpresaSaldo{
 					'$a[0]',
 					$a[1],
 					'$a[2]',
-					0,
-					0);";
+					$a[3],
+					$a[4]);";
 		$this->conectar();
 		if (mysql_query ($sql)){
 			return true;
@@ -94,6 +94,19 @@ class EmpresaSaldo{
 		}
 		else {
 			return $r;
+		}
+	}
+	
+	function eliminarTodoByAnio($anio){
+		$sql = "DELETE FROM insotic_empresa_saldo
+					WHERE year=$anio";
+		$this->conectar();
+		mysql_query ($sql);
+		if (mysql_affected_rows()==-1) {
+			return false;
+		}
+		else {
+			return true;
 		}
 	}
 	

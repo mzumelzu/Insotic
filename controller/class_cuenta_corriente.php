@@ -108,7 +108,7 @@ class CuentaCorriente{
 	*
 	* Función encargada de buscar un registro especifico de cuenta corriente segun una combinacion de año, tipo de cuenta,
 	* tipo de movimiento, empresa y numero de aporte de empresa.
-	* @param int $a - Arreglo que contiene los datos que se usarán para realizar la consulta.
+	* @param Array $a - Arreglo que contiene los datos que se usarán para realizar la consulta.
 	* @return resource - Recurso que contiene los datos devueltos por la consulta a la base de datos. En caso de error retorna false.
 	*/
 	function getCuentaCorrienteUpdate($a){
@@ -126,6 +126,26 @@ class CuentaCorriente{
 		else {
 			return $r;
 		}
+	}
+	
+	/**
+	 * 
+	 * Función encargada de eliminar las cuentas de en un año y de un tipo de movimiento especifico.
+	 * @param Array $a - Arreglo que contiene los datos necesarios para la eliminacion.
+	 * @return boolean - True si la eliminacion es correcta, false si no se elimina ningun registro u ocurre un error.
+	 */
+	function eliminarTodoByAnio($a){
+		$sql = "DELETE FROM insotic_cuenta_corriente 
+				WHERE ano_movimiento='$a[1]' AND 
+				tipo_movimiento='$a[2]'";
+		$this->conectar();
+		mysql_query ($sql);
+		if (mysql_affected_rows()==-1) {
+			return false;
+		}
+		else {
+			return true;
+		}		
 	}
 	
 }

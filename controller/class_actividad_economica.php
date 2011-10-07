@@ -1,6 +1,6 @@
 <?php
 include_once ('../model/config.php');
-
+//comentario de prueba
 class actividadEconomica{
 	//Metodo de conexión a base de datos
 	function conectar(){

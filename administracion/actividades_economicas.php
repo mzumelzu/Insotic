@@ -5,6 +5,8 @@
   <title>Administracion de Empresas</title>
   <link href="../css/administracion.css" rel="stylesheet" type="text/css" />
 </head>
+
+/* comentario prueba Calos Soto */
 <?php
 
 if (isset($_POST['guardar'])){ 
